@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Put, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -13,11 +13,16 @@ export class TasksController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todas as tarefas' })
-  @ApiQuery({ name: 'completed', required: false, type: Boolean, description: 'Filtrar por status de conclusão' })
   @ApiResponse({ status: 200, description: 'Lista de tarefas retornada com sucesso.', type: [Task] })
-  findAll(@Query('completed') completed?: string) {
-    const isCompleted = completed === undefined ? undefined : completed === 'true';
-    return this.tasksService.findAll(isCompleted);
+  findAll() {
+    return this.tasksService.findAll();
+  }
+
+  @Get('completed')
+  @ApiOperation({ summary: 'Listar todas as tarefas concluídas' })
+  @ApiResponse({ status: 200, description: 'Lista de tarefas concluídas retornada com sucesso.', type: [Task] })
+  findAllCompleted() {
+    return this.tasksService.findAllCompleted();
   }
 
   @Get(':id')

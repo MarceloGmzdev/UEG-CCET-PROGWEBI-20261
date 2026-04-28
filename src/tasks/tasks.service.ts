@@ -12,14 +12,12 @@ export class TasksService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  async findAll(completed?: boolean): Promise<Task[]> {
-    const query = this.taskRepository.createQueryBuilder('task');
-    
-    if (completed !== undefined) {
-      query.where('task.completed = :completed', { completed });
-    }
-    
-    return query.getMany();
+  async findAll(): Promise<Task[]> {
+    return this.taskRepository.find();
+  }
+
+  async findAllCompleted(): Promise<Task[]> {
+    return this.taskRepository.find({ where: { completed: true } });
   }
 
   async findOne(id: string): Promise<Task> {
